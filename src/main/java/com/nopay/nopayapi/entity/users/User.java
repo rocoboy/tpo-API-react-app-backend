@@ -1,4 +1,4 @@
-package com.nopay.nopayapi.entity;
+package com.nopay.nopayapi.entity.users;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
