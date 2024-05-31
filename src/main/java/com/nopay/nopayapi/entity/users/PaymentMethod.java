@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.math.BigDecimal;
 
 @Entity
 @Data
@@ -23,9 +24,9 @@ public class PaymentMethod {
     @Column(name = "card_issuer")
     private String cardIusuer;
 
-    @Column(name = "id_user")
-    private Integer idUser;
+    @Column(name = "id_seller")
+    private Integer idSeller;
 
-    private Float dues;
-    private Float interest;
+    private BigDecimal dues;
+    private BigDecimal interest;
 }

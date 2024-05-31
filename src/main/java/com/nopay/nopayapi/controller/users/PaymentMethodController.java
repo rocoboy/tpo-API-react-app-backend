@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/paymentMethods")
+@RequestMapping("/payment-method")
 public class PaymentMethodController {
 
     @Autowired
@@ -41,6 +41,7 @@ public class PaymentMethodController {
             updatedPaymentMethod.setDetailType(paymentMethodDetails.getDetailType());
             updatedPaymentMethod.setCardIusuer(paymentMethodDetails.getCardIusuer());
             updatedPaymentMethod.setInterest(paymentMethodDetails.getInterest());
+            updatedPaymentMethod.setIdSeller(paymentMethodDetails.getIdSeller());
             return ResponseEntity.ok(paymentMethodService.save(updatedPaymentMethod));
         } else {
             return ResponseEntity.notFound().build();
