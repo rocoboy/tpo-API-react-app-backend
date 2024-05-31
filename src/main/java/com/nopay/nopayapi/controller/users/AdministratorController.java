@@ -2,16 +2,14 @@ package com.nopay.nopayapi.controller.users;
 
 import com.nopay.nopayapi.entity.users.Administrator;
 import com.nopay.nopayapi.service.users.AdministratorService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/administrator")
+@RequestMapping("/administrators")
 public class AdministratorController {
 
     @Autowired
@@ -31,20 +29,6 @@ public class AdministratorController {
     @PostMapping
     public Administrator createAdministrator(@RequestBody Administrator administrator) {
         return administratorService.save(administrator);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Administrator> updateAdministrartor(@PathVariable Long id,
-            @RequestBody Administrator administratorDetails) {
-        Optional<Administrator> administrator = administratorService.findById(id);
-        if (administrator.isPresent()) {
-            Administrator updatedAdministrator = administrator.get();
-            updatedAdministrator.setId_administrator(administratorDetails.getId_administrator());
-
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-        return null;
     }
 
     @DeleteMapping("/{id}")

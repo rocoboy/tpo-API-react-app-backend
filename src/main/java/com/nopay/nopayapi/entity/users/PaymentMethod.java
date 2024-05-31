@@ -9,23 +9,23 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user_account")
-public class User {
+@Table(name = "payment_methods")
+public class PaymentMethod {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_payment_methods")
+    private Integer idPaymentMethod;
+
+    @Column(name = "detail_type")
+    private String detailType;
+
+    @Column(name = "card_issuer")
+    private String cardIusuer;
 
     @Column(name = "id_user")
     private Integer idUser;
 
-    @Column(name = "postal_code")
-    private String postalCode;
-
-    private int dni;
-    private String name;
-    private String surname;
-    private String address;
-    private String city;
-    private String phone;
-    private String email;
+    private Float dues;
+    private Float interest;
 }
