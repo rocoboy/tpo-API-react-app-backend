@@ -34,7 +34,7 @@ public class AdministratorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Administrator> updateAdministrartor(@PathVariable Long id,
+    public ResponseEntity<Administrator> updateAdministrator(@PathVariable Long id,
             @RequestBody Administrator administratorDetails) {
         Optional<Administrator> administrator = administratorService.findById(id);
         if (administrator.isPresent()) {
