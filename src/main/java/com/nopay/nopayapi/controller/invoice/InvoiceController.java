@@ -25,7 +25,7 @@ public class InvoiceController {
     private InvoiceService invoiceService;
 
     @GetMapping
-    public List<Invoice> getAllUsers() {
+    public List<Invoice> getAllInvoices() {
         return invoiceService.findAll();
     }
 
