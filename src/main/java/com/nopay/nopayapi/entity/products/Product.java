@@ -4,13 +4,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.math.BigDecimal;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "product")
-
 public class Product {
 
     @Id
@@ -19,11 +19,10 @@ public class Product {
     private Integer idProduct;
 
     private String description;
-    private double price;
+    private BigDecimal price;
     private Integer quantity;
     private Integer colour;
     private Integer size;
     private Integer category;
     private Integer material;
-
 }

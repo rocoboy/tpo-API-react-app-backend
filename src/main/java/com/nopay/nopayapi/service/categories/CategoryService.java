@@ -6,9 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nopay.nopayapi.entity.categories.Category;
-import com.nopay.nopayapi.repository.categories.CategoryRepository;;
-
+import com.nopay.nopayapi.entity.products.Category;
+import com.nopay.nopayapi.repository.products.CategoryRepository;
 
 @Service
 public class CategoryService {

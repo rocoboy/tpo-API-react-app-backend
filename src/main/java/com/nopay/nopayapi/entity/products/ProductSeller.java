@@ -1,5 +1,7 @@
 package com.nopay.nopayapi.entity.products;
 
+import com.nopay.nopayapi.entity.users.Seller;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,26 +12,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "product_seller")
-
 public class ProductSeller {
 
-    /*
-     * @Id
-     * 
-     * @GeneratedValue(strategy = GenerationType.IDENTITY)
-     * 
-     * @Column(name = "id_product_seller")
-     * private Integer idProductMaterial;
-     * 
-     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_product_seller")
+    private Integer idProductSeller;
 
-    // Assuming each product is unique to each seller
+    @ManyToOne
+    @JoinColumn(name = "id_product", referencedColumnName = "id_product")
+    private Product product;
 
-    @OneToOne
-    @Column(table = "id_product")
-    private Integer idProduct;
-
-    @OneToOne
-    @Column(table = "id_seller")
-    private Integer idSeller;
+    @ManyToOne
+    @JoinColumn(name = "id_seller", referencedColumnName = "id_seller")
+    private Seller seller;
 }

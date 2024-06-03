@@ -14,7 +14,9 @@ public class Colour {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_colour;
-    
+    @Column(name = "id_colour")
+    private Integer idColour;
+
     private String description;
+
 }

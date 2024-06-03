@@ -10,24 +10,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "product_colour")
-
 public class ProductColour {
 
-    /*
-     * @Id
-     * 
-     * @GeneratedValue(strategy = GenerationType.IDENTITY)
-     * 
-     * @Column(name = "id_product_colour")
-     * private Integer idProductColour;
-     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_product_colour")
+    private Integer idProductColour;
 
-    @OneToOne
-    @Column(table = "id_product")
-    private Integer idProduct;
+    @ManyToOne
+    @JoinColumn(name = "id_product", referencedColumnName = "id_product")
+    private Product product;
 
-    @OneToOne
-    @Column(table = "id_colour")
-    private Integer idColour;
-
+    @ManyToOne
+    @JoinColumn(name = "id_colour", referencedColumnName = "id_colour")
+    private Colour colour;
 }

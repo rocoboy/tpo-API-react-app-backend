@@ -9,13 +9,17 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "material")
-public class Material {
+@Table(name = "category")
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_material")
-    private Integer idMaterial;
+    @Column(name = "id_category")
+    private Integer idCategory;
 
-    private String description;
+    @Column(name = "id_parent")
+    private Integer idParent;
+
+    private String details;
+
 }
