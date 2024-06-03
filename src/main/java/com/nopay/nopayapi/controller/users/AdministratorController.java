@@ -37,8 +37,7 @@ public class AdministratorController {
         Optional<Administrator> administrator = administratorService.findById(id);
         if (administrator.isPresent()) {
             Administrator updatedAdministrator = administrator.get();
-            updatedAdministrator.setId_administrator(administratorDetails.getId_administrator());
-
+            updatedAdministrator.setIdAdministrator(administratorDetails.getIdAdministrator());
         } else {
             return ResponseEntity.notFound().build();
         }
