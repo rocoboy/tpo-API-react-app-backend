@@ -22,9 +22,11 @@ public class ProductColour {
      * private Integer idProductColour;
      */
 
+    @OneToOne
     @Column(table = "id_product")
     private Integer idProduct;
 
+    @OneToOne
     @Column(table = "id_colour")
     private Integer idColour;
 

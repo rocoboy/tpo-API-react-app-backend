@@ -14,10 +14,11 @@ import lombok.NoArgsConstructor;
 public class ProductCategory {
 
     // No primary ID here
-
+    @OneToOne
     @Column(table = "id_product")
     private Integer idProduct;
 
+    @OneToOne
     @Column(table = "id_category")
     private Integer idCategory;
 
