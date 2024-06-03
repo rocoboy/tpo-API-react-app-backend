@@ -20,20 +20,20 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public List<Product> findByColour(String colour) {
-        return productRepository.findByColour(colour);
+    public List<Product> findByColour(Long id_colour) {
+        return productRepository.findByColour(id_colour);
     }
 
-    public List<Product> findByCategory(String category) {
-        return productRepository.findByCategory(category);
+    public List<Product> findByCategory(Long id_category) {
+        return productRepository.findByCategory(id_category);
     }
 
-    public List<Product> findByMaterial(String material) {
-        return productRepository.findByMaterial(material);
+    public List<Product> findByMaterial(Long id_material) {
+        return productRepository.findByMaterial(id_material);
     }
 
-    public List<Product> findBySize(String size) {
-        return productRepository.findBySize(size);
+    public List<Product> findBySize(Long id_size) {
+        return productRepository.findBySize(id_size);
     }
 
     public List<Product> findByPrice(double price) {

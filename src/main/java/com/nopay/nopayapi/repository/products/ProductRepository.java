@@ -9,15 +9,13 @@ import com.nopay.nopayapi.entity.products.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    List<Product> findByColour(String colour);
+    List<Product> findByColour(Long id_colour);
 
-    // This should be reworked
+    List<Product> findByCategory(Long id_category);
 
-    List<Product> findByCategory(String category);
+    List<Product> findByMaterial(Long id_material);
 
-    List<Product> findByMaterial(String material);
-
-    List<Product> findBySize(String size);
+    List<Product> findBySize(Long id_size);
 
     List<Product> findByPrice(double price);
 

@@ -1,4 +1,4 @@
-package com.nopay.nopayapi.controller.users;
+package com.nopay.nopayapi.controller.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
