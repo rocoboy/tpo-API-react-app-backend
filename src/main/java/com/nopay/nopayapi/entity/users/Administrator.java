@@ -14,8 +14,10 @@ public class Administrator {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_administrator;
+    @Column(name = "id_administrator")
+    private Integer idAdministrator;
 
     @Column(name = "id_user")
-    private Integer id_user;
+    private Integer idUser;
+
 }

@@ -43,7 +43,7 @@ public class UserController {
             updatedUser.setSurname(userDetails.getSurname());
             updatedUser.setAddress(userDetails.getAddress());
             updatedUser.setCity(userDetails.getCity());
-            updatedUser.setPostal_code(userDetails.getPostal_code());
+            updatedUser.setPostalCode(userDetails.getPostalCode());
             updatedUser.setPhone(userDetails.getPhone());
             updatedUser.setEmail(userDetails.getEmail());
             return ResponseEntity.ok(userService.save(updatedUser));
