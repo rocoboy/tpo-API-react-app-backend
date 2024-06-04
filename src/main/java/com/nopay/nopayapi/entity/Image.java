@@ -24,6 +24,5 @@ public class Image {
     private byte[] imageBytes;
 
     @Column(name = "date")
-    private Date date = new Date();
-
+    private Date date;
 }
