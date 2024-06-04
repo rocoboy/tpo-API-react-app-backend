@@ -1,5 +1,7 @@
 package com.nopay.nopayapi.repository.products;
 
+import java.math.BigDecimal;
+
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,16 +11,14 @@ import com.nopay.nopayapi.entity.products.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    List<Product> findByColour(String colour);
+    List<Product> findByColour(Integer colour);
 
-    // This should be reworked
+    List<Product> findByCategory(Integer category);
 
-    List<Product> findByCategory(String category);
+    List<Product> findByMaterial(Integer material);
 
-    List<Product> findByMaterial(String material);
+    List<Product> findBySize(Integer size);
 
-    List<Product> findBySize(String size);
-
-    List<Product> findByPrice(double price);
+    List<Product> findByPrice(BigDecimal price);
 
 }
