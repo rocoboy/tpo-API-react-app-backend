@@ -9,5 +9,4 @@ public class NopayApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(NopayApiApplication.class, args);
 	}
-
 }
