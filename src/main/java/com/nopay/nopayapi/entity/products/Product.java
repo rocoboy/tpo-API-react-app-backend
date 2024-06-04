@@ -21,8 +21,4 @@ public class Product {
     private String description;
     private BigDecimal price;
     private Integer quantity;
-    private Integer colour;
-    private Integer size;
-    private Integer category;
-    private Integer material;
 }
