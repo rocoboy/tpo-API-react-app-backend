@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nopay.nopayapi.entity.invoice.Invoice;
 import com.nopay.nopayapi.service.invoice.InvoiceService;
+import com.nopay.nopayapi.service.users.UserService;
+
+
 
 @RestController
 @RequestMapping("/invoice")
@@ -23,6 +26,10 @@ public class InvoiceController {
 
     @Autowired
     private InvoiceService invoiceService;
+
+    @Autowired
+    private UserService userService;
+
 
     @GetMapping
     public List<Invoice> getAllInvoices() {
@@ -36,26 +43,52 @@ public class InvoiceController {
     }
 
     @PostMapping
-    public Invoice uploadInvoice(@RequestBody Invoice invoice) {
-        return invoiceService.save(invoice);
+    public ResponseEntity<?> uploadInvoice(@RequestBody Invoice invoice) {
+        Long idClient = Long.valueOf(invoice.getIdClient());
+        if (!userService.findById(idClient).isPresent()) {
+            return ResponseEntity.badRequest().body("The User does not exist");
+        }
+        return ResponseEntity.ok(invoiceService.save(invoice));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Invoice> updateInvoice(@PathVariable Long id, @RequestBody Invoice invoiceDetails) {
+    public ResponseEntity<?> updateInvoice(@PathVariable Long id, @RequestBody Invoice invoiceDetails) {
         Optional<Invoice> invoice = invoiceService.findById(id);
         if (invoice.isPresent()) {
+
+            if (invoiceDetails.getIdClient() != null) {
+                Long idClient = Long.valueOf(invoiceDetails.getIdClient());
+                if (!userService.findById(idClient).isPresent()) {
+                    return ResponseEntity.badRequest().body("The User does not exist");
+                }
+            }
             Invoice updatedInvoice = invoice.get();
-            updatedInvoice.setIdClient(invoiceDetails.getIdClient());
-            updatedInvoice.setDate(invoiceDetails.getDate());
-            updatedInvoice.setDetailType(invoiceDetails.getDetailType());
-            updatedInvoice.setCardIssuer(invoiceDetails.getCardIssuer());
-            updatedInvoice.setDues(invoiceDetails.getDues());
-            updatedInvoice.setInterest(invoiceDetails.getInterest());
+
+            if (invoiceDetails.getIdClient() != null) {
+                updatedInvoice.setIdClient(invoiceDetails.getIdClient());
+            }
+            if (invoiceDetails.getDate() != null) {
+                updatedInvoice.setDate(invoiceDetails.getDate());
+            }
+            if (invoiceDetails.getDetailType() != null) {
+                updatedInvoice.setDetailType(invoiceDetails.getDetailType());
+            }
+            if (invoiceDetails.getCardIssuer() != null) {
+                updatedInvoice.setCardIssuer(invoiceDetails.getCardIssuer());
+            }
+            if (invoiceDetails.getDues() != null) {
+                updatedInvoice.setDues(invoiceDetails.getDues());
+            }
+            if (invoiceDetails.getInterest() != null) {
+                updatedInvoice.setInterest(invoiceDetails.getInterest());
+            }
+    
             return ResponseEntity.ok(invoiceService.save(updatedInvoice));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+    
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteInvoice(@PathVariable Long id) {

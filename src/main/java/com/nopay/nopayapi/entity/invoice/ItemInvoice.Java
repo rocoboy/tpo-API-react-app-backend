@@ -1,6 +1,7 @@
-package com.nopay.nopayapi.entity.products;
+package com.nopay.nopayapi.entity.invoice;
 
-import jakarta.persistence.Column;
+
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,21 +11,24 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Table(name = "item_invoice")
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "product_category")
-public class ProductCategory {
+public class ItemInvoice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_product_category")
-    private Integer idProductCategory;
 
-    @Column(name = "id_product", nullable = false)
-    private Integer idProduct;
+    private Integer id_item_invoice;
 
-    @Column(name = "id_category", nullable = false)
-    private Integer idCategory;
+    private Integer id_invoice;
+
+    private Integer id_product;
+
+    private Integer quantity;
+
+    private Integer price;
+
 }
