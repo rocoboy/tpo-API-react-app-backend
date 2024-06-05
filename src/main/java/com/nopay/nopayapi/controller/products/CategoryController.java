@@ -37,18 +37,30 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<Object> createCategory(@RequestBody Category category) {
-        if (category.getIdParent() == null || category.getDetails() == null) {
-            return ResponseEntity.badRequest().body("idParent and details are required fields.");
+        if (category.getDetails() == null) {
+            return ResponseEntity.badRequest().body("Details is a required field.");
         }
-
-        Optional<Category> parentCategory = categoryService.findById(category.getIdParent());
-        if (!parentCategory.isPresent()) {
-            return ResponseEntity.badRequest().body("idParent does not exist.");
+    
+        List<Category> allCategories = categoryService.findAll();
+        if (allCategories.isEmpty()) {
+            Category savedCategory = categoryService.save(category);
+            savedCategory.setIdParent(savedCategory.getIdCategory());
+            Category updatedCategory = categoryService.save(savedCategory);
+            return ResponseEntity.ok(updatedCategory);
+        } else if (category.getIdParent() == null) {
+            return ResponseEntity.badRequest().body("idParent is a required field.");
+        } else {
+            Optional<Category> parentCategory = categoryService.findById(category.getIdParent());
+            if (!parentCategory.isPresent()) {
+                return ResponseEntity.badRequest().body("idParent does not exist.");
+            }
         }
         
         Category savedCategory = categoryService.save(category);
         return ResponseEntity.ok(savedCategory);
     }
+    
+    
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody Category categoryDetails) {
