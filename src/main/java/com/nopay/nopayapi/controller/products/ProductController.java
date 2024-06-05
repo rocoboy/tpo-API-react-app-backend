@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
-
 public class ProductController {
 
     @Autowired
@@ -30,22 +29,46 @@ public class ProductController {
     }
 
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
-        return productService.save(product);
+    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+        try {
+            Product savedProduct = productService.save(product);
+            return ResponseEntity.ok(savedProduct);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
-        Optional<Product> product = productService.findById(id);
+        Optional<Product> productOptional = productService.findById(id);
 
-        // If the product does exist
-
-        if (product.isPresent()) {
-            Product updatedProduct = product.get();
-            updatedProduct.setIdProduct(productDetails.getIdProduct());
+        if (productOptional.isPresent()) {
+            Product existingProduct = productOptional.get();
+            existingProduct.setDescription(productDetails.getDescription());
+            existingProduct.setPrice(productDetails.getPrice());
+            existingProduct.setQuantity(productDetails.getQuantity());
+            existingProduct.setCategories(productDetails.getCategories());  // Ensure categories are updated as well
+            
+            try {
+                Product updatedProduct = productService.save(existingProduct);
+                return ResponseEntity.ok(updatedProduct);
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.badRequest().body(null);
+            }
         } else {
             return ResponseEntity.notFound().build();
         }
-        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        Optional<Product> productOptional = productService.findById(id);
+
+        if (productOptional.isPresent()) {
+            productService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
