@@ -1,10 +1,11 @@
 package com.nopay.nopayapi.service;
 
 import com.nopay.nopayapi.entity.Image;
+import com.nopay.nopayapi.entity.products.Product;
 import com.nopay.nopayapi.repository.ImageRepository;
 
 import java.util.List;
-
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,8 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Image viewById(long id) {
-        return imageRepository.findById(id).get();
+    public Optional<Image> findById(Long id) {
+        return imageRepository.findById(id);
     }
 
     @Override

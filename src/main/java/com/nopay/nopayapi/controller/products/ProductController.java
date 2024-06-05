@@ -47,8 +47,7 @@ public class ProductController {
             existingProduct.setDescription(productDetails.getDescription());
             existingProduct.setPrice(productDetails.getPrice());
             existingProduct.setQuantity(productDetails.getQuantity());
-            existingProduct.setCategories(productDetails.getCategories());  // Ensure categories are updated as well
-            
+
             try {
                 Product updatedProduct = productService.save(existingProduct);
                 return ResponseEntity.ok(updatedProduct);
