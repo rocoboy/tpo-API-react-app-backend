@@ -1,6 +1,13 @@
 package com.nopay.nopayapi.entity.products;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,9 +24,8 @@ public class ProductCategory {
     @Column(name = "id_product_category")
     private Integer idProductCategory;
 
-    @ManyToOne
-    @JoinColumn(name = "id_product", referencedColumnName = "id_product")
-    private Product product;
+    @Column(name = "id_product", nullable = false)
+    private Integer idProduct;
 
     @ManyToOne
     @JoinColumn(name = "id_category", referencedColumnName = "id_category")

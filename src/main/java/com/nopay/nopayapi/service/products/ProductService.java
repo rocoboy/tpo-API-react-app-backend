@@ -1,13 +1,11 @@
 package com.nopay.nopayapi.service.products;
 
 import com.nopay.nopayapi.entity.products.Product;
-import com.nopay.nopayapi.entity.products.ProductCategory;
 import com.nopay.nopayapi.repository.products.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class ProductService {
