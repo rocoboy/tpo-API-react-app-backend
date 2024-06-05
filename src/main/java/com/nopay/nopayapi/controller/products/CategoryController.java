@@ -5,14 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.nopay.nopayapi.entity.products.Category;
 import com.nopay.nopayapi.service.products.CategoryService;
@@ -36,20 +29,30 @@ public class CategoryController {
     }
 
     @PostMapping
-    public Category createCategory(@RequestBody Category category) {
-        return categoryService.save(category);
+    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+        try {
+            Category savedCategory = categoryService.save(category);
+            return ResponseEntity.ok(savedCategory);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category categoryDetails) {
-        Optional<Category> category = categoryService.findById(id);
-        if (category.isPresent()) {
-            Category updatedCategory = category.get();
+        Optional<Category> categoryOptional = categoryService.findById(id);
 
-            updatedCategory.setDetails(categoryDetails.getDetails());
-            updatedCategory.setIdParent(categoryDetails.getIdParent());
+        if (categoryOptional.isPresent()) {
+            Category existingCategory = categoryOptional.get();
+            existingCategory.setDetails(categoryDetails.getDetails());
+            existingCategory.setIdParent(categoryDetails.getIdParent());
 
-            return ResponseEntity.ok(categoryService.save(updatedCategory));
+            try {
+                Category updatedCategory = categoryService.save(existingCategory);
+                return ResponseEntity.ok(updatedCategory);
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.badRequest().body(null);
+            }
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -57,7 +60,13 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
-        categoryService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        Optional<Category> categoryOptional = categoryService.findById(id);
+
+        if (categoryOptional.isPresent()) {
+            categoryService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
