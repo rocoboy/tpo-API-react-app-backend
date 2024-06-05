@@ -44,11 +44,30 @@ public class ProductController {
 
         if (productOptional.isPresent()) {
             Product existingProduct = productOptional.get();
-            existingProduct.setDescription(productDetails.getDescription());
-            existingProduct.setPrice(productDetails.getPrice());
-            existingProduct.setQuantity(productDetails.getQuantity());
-            existingProduct.setCategories(productDetails.getCategories());  // Ensure categories are updated as well
-            
+
+            if (productDetails.getDescription() != null) {
+
+                existingProduct.setDescription(productDetails.getDescription());
+
+            }
+
+            if (productDetails.getPrice() != null) {
+
+                existingProduct.setPrice(productDetails.getPrice());
+
+            }
+
+            if (productDetails.getQuantity() != null) {
+
+                existingProduct.setQuantity(productDetails.getQuantity());
+
+            }
+
+            if (!productDetails.getCategories().isEmpty() || productDetails.getCategories() != null) {
+
+                existingProduct.setCategories(productDetails.getCategories());
+            }
+
             try {
                 Product updatedProduct = productService.save(existingProduct);
                 return ResponseEntity.ok(updatedProduct);
