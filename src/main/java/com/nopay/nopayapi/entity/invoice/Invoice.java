@@ -21,7 +21,6 @@ public class Invoice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     @Column(name = "id_invoice")
     private Integer idInvoice;
 
