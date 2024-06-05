@@ -15,6 +15,8 @@ public class AccessUser {
     @Column(name = "id_access_user")
     private Integer idAccessUser;
 
+    private String email;
+
     @Column(name = "key")
     private String accessKey;
 }

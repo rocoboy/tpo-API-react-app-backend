@@ -45,7 +45,6 @@ public class UserController {
             updatedUser.setCity(userDetails.getCity());
             updatedUser.setPostalCode(userDetails.getPostalCode());
             updatedUser.setPhone(userDetails.getPhone());
-            updatedUser.setEmail(userDetails.getEmail());
             return ResponseEntity.ok(userService.save(updatedUser));
         } else {
             return ResponseEntity.notFound().build();

@@ -18,7 +18,7 @@ import com.nopay.nopayapi.entity.invoice.InvoiceItem;
 import com.nopay.nopayapi.service.invoice.InvoiceItemService;
 
 @RestController
-@RequestMapping("/item_invoice")
+@RequestMapping("/item-invoice")
 public class InvoiceItemController {
 
     @Autowired
