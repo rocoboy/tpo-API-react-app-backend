@@ -9,23 +9,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user_account")
-public class User {
+@Table(name = "administrator")
+public class Administrator {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_administrator")
+    private Integer idAdministrator;
 
     @Column(name = "id_user")
     private Integer idUser;
 
-    @Column(name = "postal_code")
-    private String postalCode;
-
-    private int dni;
-    private String name;
-    private String surname;
-    private String address;
-    private String city;
-    private String phone;
-    private String email;
 }
