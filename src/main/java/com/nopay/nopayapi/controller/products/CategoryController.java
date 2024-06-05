@@ -36,24 +36,41 @@ public class CategoryController {
     }
 
     @PostMapping
-    public Category createCategory(@RequestBody Category category) {
-        return categoryService.save(category);
+    public ResponseEntity<Object> createCategory(@RequestBody Category category) {
+        if (category.getIdParent() == null || category.getDetails() == null) {
+            return ResponseEntity.badRequest().body("idParent and details are required fields.");
+        }
+
+        Optional<Category> parentCategory = categoryService.findById(category.getIdParent());
+        if (!parentCategory.isPresent()) {
+            return ResponseEntity.badRequest().body("idParent does not exist.");
+        }
+        
+        Category savedCategory = categoryService.save(category);
+        return ResponseEntity.ok(savedCategory);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category categoryDetails) {
+    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody Category categoryDetails) {
         Optional<Category> category = categoryService.findById(id);
         if (category.isPresent()) {
             Category updatedCategory = category.get();
-
+    
             updatedCategory.setDetails(categoryDetails.getDetails());
-            updatedCategory.setIdParent(categoryDetails.getIdParent());
-
+            if (categoryDetails.getIdParent() != null) {
+                Optional<Category> parentCategory = categoryService.findById(categoryDetails.getIdParent());
+                if (!parentCategory.isPresent()) {
+                    return ResponseEntity.badRequest().body("idParent does not exist.");
+                }
+                updatedCategory.setIdParent(categoryDetails.getIdParent());
+            }
+            
             return ResponseEntity.ok(categoryService.save(updatedCategory));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+    
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
