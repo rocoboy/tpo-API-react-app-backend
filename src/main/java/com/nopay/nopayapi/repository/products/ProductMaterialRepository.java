@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import com.nopay.nopayapi.entity.products.ProductMaterial;
 
 @Repository
-public interface ProductMaterialRepository extends JpaRepository<ProductMaterial, Long> {
+public interface ProductMaterialRepository extends JpaRepository<ProductMaterial, Integer> {
     ///
 }

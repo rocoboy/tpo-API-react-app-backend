@@ -19,7 +19,7 @@ public class InvoiceItemService {
         return invoiceItemRepository.findAll();
     }
 
-    public Optional<InvoiceItem> findById(Long id) {
+    public Optional<InvoiceItem> findById(Integer id) {
         return invoiceItemRepository.findById(id);
     }
 
@@ -27,7 +27,7 @@ public class InvoiceItemService {
         return invoiceItemRepository.save(invoiceItem);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         invoiceItemRepository.deleteById(id);
     }
 }

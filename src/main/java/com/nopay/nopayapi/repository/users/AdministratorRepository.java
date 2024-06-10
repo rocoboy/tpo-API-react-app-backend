@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.nopay.nopayapi.entity.users.Administrator;
 
 @Repository
-public interface AdministratorRepository extends JpaRepository<Administrator, Long> {
+public interface AdministratorRepository extends JpaRepository<Administrator, Integer> {
     ///
 }

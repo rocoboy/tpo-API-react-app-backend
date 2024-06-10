@@ -19,7 +19,7 @@ public class ColourService {
         return colourRepository.findAll();
     }
 
-    public Optional<Colour> findById(long id) {
+    public Optional<Colour> findById(Integer id) {
         return colourRepository.findById(id);
     }
 
@@ -27,7 +27,7 @@ public class ColourService {
         return colourRepository.save(colour);
     }
 
-    public void deleteById(long id) {
+    public void deleteById(Integer id) {
         colourRepository.deleteById(id);
     }
 }

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.nopay.nopayapi.entity.users.AccessUser;
 
 @Repository
-public interface AccessUserRepository extends JpaRepository<AccessUser, Long> {
+public interface AccessUserRepository extends JpaRepository<AccessUser, Integer> {
     ///
 }

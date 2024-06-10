@@ -19,7 +19,7 @@ public class MaterialService {
         return materialRepository.findAll();
     }
 
-    public Optional<Material> findById(Long id) {
+    public Optional<Material> findById(Integer id) {
         return materialRepository.findById(id);
     }
 
@@ -27,7 +27,7 @@ public class MaterialService {
         return materialRepository.save(material);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         materialRepository.deleteById(id);
     }
 }

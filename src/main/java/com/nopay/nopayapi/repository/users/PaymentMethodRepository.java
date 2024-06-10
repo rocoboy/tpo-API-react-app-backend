@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.nopay.nopayapi.entity.users.PaymentMethod;
 
 @Repository
-public interface PaymentMethodRepository extends JpaRepository<PaymentMethod, Long> {
+public interface PaymentMethodRepository extends JpaRepository<PaymentMethod, Integer> {
     ///
 }

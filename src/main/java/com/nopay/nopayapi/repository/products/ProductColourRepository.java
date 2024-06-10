@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import com.nopay.nopayapi.entity.products.ProductColour;
 
 @Repository
-public interface ProductColourRepository extends JpaRepository<ProductColour, Long> {
+public interface ProductColourRepository extends JpaRepository<ProductColour, Integer> {
     ///
 }
