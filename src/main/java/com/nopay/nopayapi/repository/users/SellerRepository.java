@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.nopay.nopayapi.entity.users.Seller;
 
 @Repository
-public interface SellerRepository extends JpaRepository<Seller, Long> {
+public interface SellerRepository extends JpaRepository<Seller, Integer> {
     ///
 }

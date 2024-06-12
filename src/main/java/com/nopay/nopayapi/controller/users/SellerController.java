@@ -21,7 +21,7 @@ public class SellerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Seller> getSellerById(@PathVariable Long id) {
+    public ResponseEntity<Seller> getSellerById(@PathVariable Integer id) {
         Optional<Seller> seller = sellerService.findById(id);
         return seller.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -32,7 +32,7 @@ public class SellerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Seller> updateSeller(@PathVariable Long id, @RequestBody Seller sellerDetails) {
+    public ResponseEntity<Seller> updateSeller(@PathVariable Integer id, @RequestBody Seller sellerDetails) {
         Optional<Seller> seller = sellerService.findById(id);
         if (seller.isPresent()) {
             Seller updatedSeller = seller.get();
@@ -44,7 +44,7 @@ public class SellerController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSeller(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteSeller(@PathVariable Integer id) {
         sellerService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

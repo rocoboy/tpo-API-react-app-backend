@@ -19,7 +19,7 @@ public class AccessUserService {
         return accessUserRepositoryy.findAll();
     }
 
-    public Optional<AccessUser> findById(Long id) {
+    public Optional<AccessUser> findById(Integer id) {
         return accessUserRepositoryy.findById(id);
     }
 
@@ -27,7 +27,7 @@ public class AccessUserService {
         return accessUserRepositoryy.save(accessUser);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         accessUserRepositoryy.deleteById(id);
     }
 }

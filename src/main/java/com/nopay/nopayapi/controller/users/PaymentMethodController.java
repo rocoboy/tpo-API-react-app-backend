@@ -21,7 +21,7 @@ public class PaymentMethodController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PaymentMethod> getPaymentMethodById(@PathVariable Long id) {
+    public ResponseEntity<PaymentMethod> getPaymentMethodById(@PathVariable Integer id) {
         Optional<PaymentMethod> paymentMethod = paymentMethodService.findById(id);
         return paymentMethod.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -32,7 +32,7 @@ public class PaymentMethodController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PaymentMethod> updatePaymentMethod(@PathVariable Long id,
+    public ResponseEntity<PaymentMethod> updatePaymentMethod(@PathVariable Integer id,
             @RequestBody PaymentMethod paymentMethodDetails) {
         Optional<PaymentMethod> paymentMethod = paymentMethodService.findById(id);
         if (paymentMethod.isPresent()) {
@@ -49,7 +49,7 @@ public class PaymentMethodController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> detelePaymentMethod(@PathVariable Long id) {
+    public ResponseEntity<Void> detelePaymentMethod(@PathVariable Integer id) {
         paymentMethodService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

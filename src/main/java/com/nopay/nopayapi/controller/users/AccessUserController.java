@@ -23,7 +23,7 @@ public class AccessUserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AccessUser> getAccessUserById(@PathVariable Long id) {
+    public ResponseEntity<AccessUser> getAccessUserById(@PathVariable Integer id) {
         Optional<AccessUser> user = accessUserService.findById(id);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -34,13 +34,13 @@ public class AccessUserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AccessUser> updateAccessUser(@PathVariable Long id,
+    public ResponseEntity<AccessUser> updateAccessUser(@PathVariable Integer id,
             @RequestBody AccessUser accessUserDetails) {
         return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAccessUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteAccessUser(@PathVariable Integer id) {
         accessUserService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

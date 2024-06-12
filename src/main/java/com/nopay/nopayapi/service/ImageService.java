@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public interface ImageService {
     public Image create(Image image);
 
-    public Optional<Image> findById(Long id);
+    public Optional<Image> findById(Integer id);
 
     public void save(Image image);
 

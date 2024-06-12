@@ -1,5 +1,11 @@
 package com.nopay.nopayapi.entity.users;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.nopay.nopayapi.entity.products.Product;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,4 +27,11 @@ public class Seller {
     private Integer idUser;
 
     private String cuit;
+
+    private String name;
+
+    @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Set<Product> products = new HashSet<>();
+
 }

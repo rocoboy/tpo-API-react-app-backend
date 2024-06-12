@@ -19,7 +19,7 @@ public class SellerService {
         return sellerRepository.findAll();
     }
 
-    public Optional<Seller> findById(Long id) {
+    public Optional<Seller> findById(Integer id) {
         return sellerRepository.findById(id);
     }
 
@@ -27,7 +27,7 @@ public class SellerService {
         return sellerRepository.save(seller);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         sellerRepository.deleteById(id);
     }
 }

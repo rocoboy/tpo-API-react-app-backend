@@ -19,7 +19,7 @@ public class SizeService {
         return sizeRepository.findAll();
     }
 
-    public Optional<Size> findById(long id) {
+    public Optional<Size> findById(Integer id) {
         return sizeRepository.findById(id);
     }
 
@@ -27,7 +27,7 @@ public class SizeService {
         return sizeRepository.save(size);
     }
 
-    public void deleteById(long id) {
+    public void deleteById(Integer id) {
         sizeRepository.deleteById(id);
     }
 }

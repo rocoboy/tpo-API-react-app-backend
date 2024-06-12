@@ -20,7 +20,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Optional<Image> findById(Long id) {
+    public Optional<Image> findById(Integer id) {
         return imageRepository.findById(id);
     }
 

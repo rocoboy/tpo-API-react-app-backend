@@ -18,8 +18,6 @@ import com.nopay.nopayapi.entity.invoice.Invoice;
 import com.nopay.nopayapi.service.invoice.InvoiceService;
 import com.nopay.nopayapi.service.users.UserService;
 
-
-
 @RestController
 @RequestMapping("/invoice")
 public class InvoiceController {
@@ -30,21 +28,20 @@ public class InvoiceController {
     @Autowired
     private UserService userService;
 
-
     @GetMapping
     public List<Invoice> getAllInvoices() {
         return invoiceService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Invoice> getInvoiceByID(@PathVariable Long id) {
+    public ResponseEntity<Invoice> getInvoiceByID(@PathVariable Integer id) {
         Optional<Invoice> user = invoiceService.findById(id);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
     public ResponseEntity<?> uploadInvoice(@RequestBody Invoice invoice) {
-        Long idClient = Long.valueOf(invoice.getIdClient());
+        Integer idClient = Integer.valueOf(invoice.getIdClient());
         if (!userService.findById(idClient).isPresent()) {
             return ResponseEntity.badRequest().body("The User does not exist");
         }
@@ -52,12 +49,12 @@ public class InvoiceController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateInvoice(@PathVariable Long id, @RequestBody Invoice invoiceDetails) {
+    public ResponseEntity<?> updateInvoice(@PathVariable Integer id, @RequestBody Invoice invoiceDetails) {
         Optional<Invoice> invoice = invoiceService.findById(id);
         if (invoice.isPresent()) {
 
             if (invoiceDetails.getIdClient() != null) {
-                Long idClient = Long.valueOf(invoiceDetails.getIdClient());
+                Integer idClient = Integer.valueOf(invoiceDetails.getIdClient());
                 if (!userService.findById(idClient).isPresent()) {
                     return ResponseEntity.badRequest().body("The User does not exist");
                 }
@@ -82,16 +79,15 @@ public class InvoiceController {
             if (invoiceDetails.getInterest() != null) {
                 updatedInvoice.setInterest(invoiceDetails.getInterest());
             }
-    
+
             return ResponseEntity.ok(invoiceService.save(updatedInvoice));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-    
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteInvoice(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteInvoice(@PathVariable Integer id) {
         invoiceService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

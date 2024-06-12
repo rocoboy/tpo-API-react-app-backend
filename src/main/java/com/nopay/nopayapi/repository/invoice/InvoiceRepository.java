@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.nopay.nopayapi.entity.invoice.Invoice;
 
 @Repository
-public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
+public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
 }

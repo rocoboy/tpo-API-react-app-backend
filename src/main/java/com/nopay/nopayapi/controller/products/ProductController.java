@@ -1,21 +1,16 @@
 package com.nopay.nopayapi.controller.products;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.nopay.nopayapi.dto.products.ProductRequestDTO;
+import com.nopay.nopayapi.dto.products.ProductResponseDTO;
+import com.nopay.nopayapi.dto.products.ProductUpdateRequestDTO;
 import com.nopay.nopayapi.entity.products.Product;
 import com.nopay.nopayapi.service.products.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
@@ -25,20 +20,20 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public List<Product> getAllProducts() {
+    public List<ProductResponseDTO> getAllProducts() {
         return productService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        Optional<Product> product = productService.findById(id);
+    public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable Integer id) {
+        Optional<ProductResponseDTO> product = productService.findById(id);
         return product.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody ProductRequestDTO productRequestDTO) {
         try {
-            Product savedProduct = productService.save(product);
+            ProductResponseDTO savedProduct = productService.save(productRequestDTO);
             return ResponseEntity.ok(savedProduct);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);
@@ -46,17 +41,14 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
-        Optional<Product> productOptional = productService.findById(id);
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Integer id,
+            @RequestBody ProductUpdateRequestDTO productUpdateRequestDTO) {
+        Optional<Product> productOptional = productService.findEntityById(id);
 
         if (productOptional.isPresent()) {
-            Product existingProduct = productOptional.get();
-            existingProduct.setDescription(productDetails.getDescription());
-            existingProduct.setPrice(productDetails.getPrice());
-            existingProduct.setQuantity(productDetails.getQuantity());
-
             try {
-                Product updatedProduct = productService.save(existingProduct);
+                ProductResponseDTO updatedProduct = productService.update(productOptional.get(),
+                        productUpdateRequestDTO);
                 return ResponseEntity.ok(updatedProduct);
             } catch (IllegalArgumentException e) {
                 return ResponseEntity.badRequest().body(null);
@@ -67,8 +59,8 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        Optional<Product> productOptional = productService.findById(id);
+    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
+        Optional<Product> productOptional = productService.findEntityById(id);
 
         if (productOptional.isPresent()) {
             productService.deleteById(id);

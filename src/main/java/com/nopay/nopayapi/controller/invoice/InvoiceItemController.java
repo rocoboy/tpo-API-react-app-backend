@@ -30,7 +30,7 @@ public class InvoiceItemController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InvoiceItem> getInvoiceItemByID(@PathVariable Long id) {
+    public ResponseEntity<InvoiceItem> getInvoiceItemByID(@PathVariable Integer id) {
         Optional<InvoiceItem> user = invoiceItemService.findById(id);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -41,7 +41,7 @@ public class InvoiceItemController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<InvoiceItem> updateInvoiceItem(@PathVariable Long id,
+    public ResponseEntity<InvoiceItem> updateInvoiceItem(@PathVariable Integer id,
             @RequestBody InvoiceItem invoiceItemDetails) {
         Optional<InvoiceItem> invoice = invoiceItemService.findById(id);
         if (invoice.isPresent()) {
@@ -57,7 +57,7 @@ public class InvoiceItemController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteInvoiceItemByID(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteInvoiceItemByID(@PathVariable Integer id) {
         invoiceItemService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
