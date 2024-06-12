@@ -47,7 +47,7 @@ public class ImagesController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
+    public ResponseEntity<byte[]> getImage(@PathVariable Integer id) {
         Optional<Image> image = imageService.findById(id);
 
         if (image.isPresent()) {
