@@ -5,10 +5,13 @@ import com.nopay.nopayapi.entity.Image;
 import com.nopay.nopayapi.service.ImageService;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,24 +30,30 @@ public class ImagesController {
         return ResponseEntity.ok().body(images);
     }
 
-    @PostMapping()
-    public ResponseEntity<String> addImage(@RequestParam("name") String name,
-            @RequestParam("file") MultipartFile file) {
+    @PostMapping
+    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file, @RequestParam("name") String name) {
         try {
-            // Obtener los bytes de la imagen
-            byte[] bytes = file.getBytes();
-
-            // Crear una nueva instancia de Image con el nombre y los bytes de la imagen
             Image image = new Image();
-            image.setImageBytes(bytes);
+            image.setName(name.getBytes());
+            image.setImageBytes(file.getBytes());
 
-            // Guardar la imagen en la base de datos
             imageService.save(image);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body("Image added successfully.");
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add image.");
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
+        Optional<Image> image = imageService.findById(id);
+
+        if (image.isPresent()) {
+            return ResponseEntity.ok().body(image.get().getImage());
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }

@@ -23,6 +23,13 @@ public class Image {
     @Column(name = "image")
     private byte[] imageBytes;
 
+    @Column(name = "name")
+    private byte[] name;
+
     @Column(name = "date")
     private Date date;
+
+    public byte[] getImage() {
+        return this.imageBytes;
+    }
 }
