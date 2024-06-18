@@ -36,7 +36,7 @@ public class ProductService {
 
     @Transactional
     public List<ProductResponseDTO> findAll() {
-        List<Product> products = productRepository.findAllWithCategories();
+        List<Product> products = productRepository.findAll();
         return products.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
@@ -54,28 +54,21 @@ public class ProductService {
     @Transactional
     public ProductResponseDTO save(ProductRequestDTO productRequestDTO) {
         Set<Category> categories = new HashSet<>();
-        Product product = new Product();
         if (productRequestDTO.getCategoryIds() != null && !productRequestDTO.getCategoryIds().isEmpty()) {
             for (Integer categoryId : productRequestDTO.getCategoryIds()) {
-                Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
-                categoryOptional.ifPresent(categories::add);
+                categoryRepository.findById(categoryId).ifPresent(categories::add);
             }
         }
 
-        if (productRequestDTO.getSellerId() == null) {
-            throw new IllegalArgumentException("Seller ID must be provided");
-        }
+        Seller seller = sellerRepository.findById(productRequestDTO.getSellerId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Seller ID"));
 
-        Optional<Seller> sellerOptional = sellerRepository.findById(productRequestDTO.getSellerId());
-        if (!sellerOptional.isPresent()) {
-            throw new IllegalArgumentException("Invalid Seller ID");
-        }
-
-        product.setSeller(sellerOptional.get());
+        Product product = new Product();
         product.setDescription(productRequestDTO.getDescription());
         product.setPrice(productRequestDTO.getPrice());
         product.setQuantity(productRequestDTO.getQuantity());
         product.setCategories(categories);
+        product.setSeller(seller);
 
         Product savedProduct = productRepository.save(product);
         return convertToDTO(savedProduct);
@@ -84,11 +77,9 @@ public class ProductService {
     @Transactional
     public ProductResponseDTO update(Product existingProduct, ProductUpdateRequestDTO productUpdateRequestDTO) {
         Set<Category> categories = new HashSet<>();
-
         if (productUpdateRequestDTO.getCategoryIds() != null && !productUpdateRequestDTO.getCategoryIds().isEmpty()) {
             for (Integer categoryId : productUpdateRequestDTO.getCategoryIds()) {
-                Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
-                categoryOptional.ifPresent(categories::add);
+                categoryRepository.findById(categoryId).ifPresent(categories::add);
             }
         }
 

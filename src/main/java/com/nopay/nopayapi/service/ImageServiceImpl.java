@@ -1,7 +1,6 @@
 package com.nopay.nopayapi.service;
 
 import com.nopay.nopayapi.entity.Image;
-import com.nopay.nopayapi.entity.products.Product;
 import com.nopay.nopayapi.repository.ImageRepository;
 
 import java.util.List;
