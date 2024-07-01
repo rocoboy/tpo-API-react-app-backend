@@ -3,14 +3,14 @@ package com.nopay.nopayapi.dto.products;
 
 import java.math.BigDecimal;
 import java.util.List;
-
-import com.nopay.nopayapi.entity.products.Category;
+import java.util.Set;
 
 public class ProductUpdateRequestDTO {
     private String description;
     private BigDecimal price;
-    private Integer quantity;
     private List<String> categories; // Changed to List<String>
+    private Set<SizeDTO> sizes;
+    private Set<ColorDTO> colors;
 
     // Getters and Setters
     public String getDescription() {
@@ -29,12 +29,12 @@ public class ProductUpdateRequestDTO {
         this.price = price;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public Set<SizeDTO> getSizes() {
+        return sizes;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setSizes(Set<SizeDTO> sizes) {
+        this.sizes = sizes;
     }
 
     public List<String> getCategories() {
@@ -43,5 +43,13 @@ public class ProductUpdateRequestDTO {
 
     public void setCategories(List<String> categories) {
         this.categories = categories;
+    }
+
+    public Set<ColorDTO> getColors() {
+        return colors;
+    }
+
+    public void setColors(Set<ColorDTO> colors) {
+        this.colors = colors;
     }
 }

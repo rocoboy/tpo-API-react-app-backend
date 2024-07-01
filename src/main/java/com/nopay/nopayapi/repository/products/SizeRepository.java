@@ -6,5 +6,4 @@ import com.nopay.nopayapi.entity.products.Size;
 
 @Repository
 public interface SizeRepository extends JpaRepository<Size, Integer> {
-    ///
 }

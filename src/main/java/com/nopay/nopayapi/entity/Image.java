@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+import com.nopay.nopayapi.entity.products.Product;
+
 @Data
 @Entity
 @Builder
@@ -18,11 +20,16 @@ import java.util.Date;
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "image")
     private byte[] imageBytes;
 
     @Column(name = "date")
     private Date date;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
 }

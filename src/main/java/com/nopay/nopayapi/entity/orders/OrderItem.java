@@ -1,6 +1,8 @@
 package com.nopay.nopayapi.entity.orders;
 
 import com.nopay.nopayapi.entity.products.Product;
+import com.nopay.nopayapi.entity.products.Size;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,5 +31,6 @@ public class OrderItem {
     private Product product;
 
     private Integer quantity;
+    private Size size;
     private BigDecimal price;
 }

@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 import com.nopay.nopayapi.dto.SellerDTO;
-import com.nopay.nopayapi.entity.products.Category;
 
 public class ProductResponseDTO {
 

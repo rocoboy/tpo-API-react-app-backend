@@ -68,14 +68,22 @@ public class OrderService {
         for (OrderItemDTO itemDTO : items) {
             Product product = productRepository.findById(itemDTO.getProductId())
                     .orElseThrow(() -> new RuntimeException("Product not found"));
-            if (product.getStock() < itemDTO.getQuantity()) {
-                throw new RuntimeException("Not enough stock for product: " + product.getDescription());
-            }
+
+            product.getSizes().forEach(size -> {
+                if (size.getDescription().toString().equals(itemDTO.getSizeDescription())) {
+                    if (size.getStock() < itemDTO.getQuantity()) {
+                        throw new RuntimeException("Not enough stock for product: " + product.getDescription());
+                    }
+                }
+            });
 
             OrderItem orderItem = new OrderItem();
             orderItem.setProduct(product);
             orderItem.setQuantity(itemDTO.getQuantity());
             orderItem.setPrice(product.getPrice());
+            orderItem.setSize(product.getSizes().stream()
+                    .filter(size -> size.getDescription().toString().equals(itemDTO.getSizeDescription())).findFirst()
+                    .get());
             orderItems.add(orderItem);
         }
 
@@ -123,7 +131,11 @@ public class OrderService {
             item.setOrder(order);
             orderItemRepository.save(item);
             Product product = item.getProduct();
-            product.setStock(product.getStock() - item.getQuantity());
+            product.getSizes().forEach(size -> {
+                if (size.getDescription().equals(item.getSize().getDescription())) {
+                    size.setStock(size.getStock() - item.getQuantity());
+                }
+            });
         }
 
         return order;

@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class ImageResponse {
-    private Long id;
+    private Integer id;
     private String file;
 }
