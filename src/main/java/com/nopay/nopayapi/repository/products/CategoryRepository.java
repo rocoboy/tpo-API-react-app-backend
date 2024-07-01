@@ -7,4 +7,7 @@ import com.nopay.nopayapi.entity.products.Category;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
+    // findByCategoryName
+    Category findByName(String name);
+
 }

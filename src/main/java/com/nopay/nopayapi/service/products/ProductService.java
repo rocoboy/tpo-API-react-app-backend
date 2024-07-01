@@ -1,18 +1,20 @@
 package com.nopay.nopayapi.service.products;
 
-import com.nopay.nopayapi.dto.CategoryDTO;
 import com.nopay.nopayapi.dto.SellerDTO;
 import com.nopay.nopayapi.dto.products.ProductRequestDTO;
 import com.nopay.nopayapi.dto.products.ProductResponseDTO;
 import com.nopay.nopayapi.dto.products.ProductUpdateRequestDTO;
 import com.nopay.nopayapi.entity.products.Category;
 import com.nopay.nopayapi.entity.products.Product;
-import com.nopay.nopayapi.entity.users.Seller;
-import com.nopay.nopayapi.repository.products.CategoryRepository;
+import com.nopay.nopayapi.entity.users.Role;
+import com.nopay.nopayapi.entity.users.User;
 import com.nopay.nopayapi.repository.products.ProductRepository;
-import com.nopay.nopayapi.repository.users.SellerRepository;
+import com.nopay.nopayapi.service.products.CategoryService;
+import com.nopay.nopayapi.repository.users.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,10 +31,7 @@ public class ProductService {
     private ProductRepository productRepository;
 
     @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private SellerRepository sellerRepository;
+    private CategoryService categoryService;
 
     @Transactional
     public List<ProductResponseDTO> findAll() {
@@ -53,40 +52,68 @@ public class ProductService {
 
     @Transactional
     public ProductResponseDTO save(ProductRequestDTO productRequestDTO) {
-        Set<Category> categories = new HashSet<>();
-        if (productRequestDTO.getCategoryIds() != null && !productRequestDTO.getCategoryIds().isEmpty()) {
-            for (Integer categoryId : productRequestDTO.getCategoryIds()) {
-                categoryRepository.findById(categoryId).ifPresent(categories::add);
-            }
+        // Check if the user has a valid token
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            throw new UsernameNotFoundException("User not found");
         }
+        User seller = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        Seller seller = sellerRepository.findById(productRequestDTO.getSellerId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Seller ID"));
+        if (seller.getRole().equals(Role.USER)) {
+            throw new IllegalArgumentException("User is not a seller");
+        }
 
         Product product = new Product();
         product.setDescription(productRequestDTO.getDescription());
         product.setPrice(productRequestDTO.getPrice());
-        product.setQuantity(productRequestDTO.getQuantity());
+        product.setStock(productRequestDTO.getQuantity());
+
+        Set<Category> categories = new HashSet<>();
+        productRequestDTO.getCategories().forEach(cat -> {
+            Category category = categoryService.findByName(cat);
+            if (category != null) {
+                categories.add(category);
+            }
+        });
+
         product.setCategories(categories);
         product.setSeller(seller);
 
         Product savedProduct = productRepository.save(product);
-        return convertToDTO(savedProduct);
+        ProductResponseDTO response = convertToDTO(savedProduct);
+        return response;
     }
 
     @Transactional
     public ProductResponseDTO update(Product existingProduct, ProductUpdateRequestDTO productUpdateRequestDTO) {
-        Set<Category> categories = new HashSet<>();
-        if (productUpdateRequestDTO.getCategoryIds() != null && !productUpdateRequestDTO.getCategoryIds().isEmpty()) {
-            for (Integer categoryId : productUpdateRequestDTO.getCategoryIds()) {
-                categoryRepository.findById(categoryId).ifPresent(categories::add);
-            }
+        // Check if the user has a valid token
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        // Check if the user is the seller of the product
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!user.getId().equals(existingProduct.getSeller().getId())) {
+            throw new IllegalArgumentException("User is not the seller of the product");
         }
 
         existingProduct.setDescription(productUpdateRequestDTO.getDescription());
         existingProduct.setPrice(productUpdateRequestDTO.getPrice());
-        existingProduct.setQuantity(productUpdateRequestDTO.getQuantity());
-        existingProduct.setCategories(categories);
+        existingProduct.setStock(productUpdateRequestDTO.getQuantity());
+
+        Set<Category> categories = new HashSet<>();
+        productUpdateRequestDTO.getCategories().forEach(cat -> {
+            try {
+                Category category = categoryService.findByName(cat);
+                if (category != null) {
+                    categories.add(category);
+                }
+
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid category: " + cat);
+            }
+        });
+
+        existingProduct.getCategories().clear();
 
         Product updatedProduct = productRepository.save(existingProduct);
         return convertToDTO(updatedProduct);
@@ -97,28 +124,27 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
+    public List<ProductResponseDTO> findByCategories(List<String> categories) {
+        List<Product> products = productRepository.findByCategories(categories);
+        return products.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
     private ProductResponseDTO convertToDTO(Product product) {
         ProductResponseDTO dto = new ProductResponseDTO();
         dto.setIdProduct(product.getIdProduct());
         dto.setDescription(product.getDescription());
         dto.setPrice(product.getPrice());
-        dto.setQuantity(product.getQuantity());
-        dto.setCategories(product.getCategories().stream().map(this::convertToDTO).collect(Collectors.toSet()));
+        dto.setQuantity(product.getStock());
+        Set<String> categories = product.getCategories().stream().map(Category::getName).collect(Collectors.toSet());
+        dto.setCategories(categories);
         dto.setSeller(product.getSeller() != null ? convertToDTO(product.getSeller()) : null);
         return dto;
     }
 
-    private CategoryDTO convertToDTO(Category category) {
-        CategoryDTO dto = new CategoryDTO();
-        dto.setIdCategory(category.getIdCategory());
-        dto.setDescription(category.getDescription());
-        return dto;
-    }
-
-    private SellerDTO convertToDTO(Seller seller) {
+    private SellerDTO convertToDTO(User seller) {
         SellerDTO dto = new SellerDTO();
-        dto.setIdSeller(seller.getIdSeller());
-        dto.setName(seller.getName());
+        dto.setIdSeller(seller.getId());
+        dto.setName(seller.getFirstName());
         return dto;
     }
 }

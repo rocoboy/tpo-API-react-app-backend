@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 import com.nopay.nopayapi.dto.SellerDTO;
-import com.nopay.nopayapi.dto.CategoryDTO;
+import com.nopay.nopayapi.entity.products.Category;
 
 public class ProductResponseDTO {
 
@@ -12,9 +12,10 @@ public class ProductResponseDTO {
     private String description;
     private BigDecimal price;
     private Integer quantity;
-    private Set<CategoryDTO> categories;
+    private Set<String> categories; // Changed to List<String>
     private SellerDTO seller;
 
+    // Getters and Setters
     public Integer getIdProduct() {
         return idProduct;
     }
@@ -47,11 +48,11 @@ public class ProductResponseDTO {
         this.quantity = quantity;
     }
 
-    public Set<CategoryDTO> getCategories() {
+    public Set<String> getCategories() {
         return categories;
     }
 
-    public void setCategories(Set<CategoryDTO> categories) {
+    public void setCategories(Set<String> categories) {
         this.categories = categories;
     }
 
@@ -62,5 +63,4 @@ public class ProductResponseDTO {
     public void setSeller(SellerDTO seller) {
         this.seller = seller;
     }
-
 }

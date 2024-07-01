@@ -5,6 +5,7 @@ import com.nopay.nopayapi.dto.products.ProductResponseDTO;
 import com.nopay.nopayapi.dto.products.ProductUpdateRequestDTO;
 import com.nopay.nopayapi.entity.products.Product;
 import com.nopay.nopayapi.service.products.ProductService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,17 +32,17 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody ProductRequestDTO productRequestDTO) {
+    public ResponseEntity<?> createProduct(@RequestBody ProductRequestDTO productRequestDTO) {
         try {
             ProductResponseDTO savedProduct = productService.save(productRequestDTO);
             return ResponseEntity.ok(savedProduct);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Integer id,
+    public ResponseEntity<?> updateProduct(@PathVariable Integer id,
             @RequestBody ProductUpdateRequestDTO productUpdateRequestDTO) {
         Optional<Product> productOptional = productService.findEntityById(id);
 
@@ -51,7 +52,7 @@ public class ProductController {
                         productUpdateRequestDTO);
                 return ResponseEntity.ok(updatedProduct);
             } catch (IllegalArgumentException e) {
-                return ResponseEntity.badRequest().body(null);
+                return ResponseEntity.badRequest().body(e.getMessage());
             }
         } else {
             return ResponseEntity.notFound().build();
@@ -68,5 +69,10 @@ public class ProductController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/categories")
+    public List<ProductResponseDTO> getProductsByCategories(@RequestParam List<String> categories) {
+        return productService.findByCategories(categories);
     }
 }

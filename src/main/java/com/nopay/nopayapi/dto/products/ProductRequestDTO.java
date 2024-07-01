@@ -1,15 +1,14 @@
 package com.nopay.nopayapi.dto.products;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.List;
 
 public class ProductRequestDTO {
 
     private String description;
     private BigDecimal price;
     private Integer quantity;
-    private Set<Integer> categoryIds;
-    private Integer sellerId;
+    private List<String> categories; // Changed to List<String>
 
     // Getters and Setters
     public String getDescription() {
@@ -36,20 +35,8 @@ public class ProductRequestDTO {
         this.quantity = quantity;
     }
 
-    public Set<Integer> getCategoryIds() {
-        return categoryIds;
-    }
-
-    public void setCategoryIds(Set<Integer> categoryIds) {
-        this.categoryIds = categoryIds;
-    }
-
-    public Integer getSellerId() {
-        return sellerId;
-    }
-
-    public void setSellerId(Integer sellerId) {
-        this.sellerId = sellerId;
+    public List<String> getCategories() {
+        return categories;
     }
 
 }

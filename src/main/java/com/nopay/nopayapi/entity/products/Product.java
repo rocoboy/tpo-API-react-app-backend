@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.nopay.nopayapi.entity.users.Seller;
+import com.nopay.nopayapi.entity.users.User;
 
 @Entity
 @Data
@@ -24,7 +23,7 @@ public class Product {
 
     private String description;
     private BigDecimal price;
-    private Integer quantity;
+    private Integer stock;
 
     @ManyToMany
     @JoinTable(name = "product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
@@ -32,5 +31,6 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "seller_id", nullable = false)
-    private Seller seller;
+    private User seller;
+
 }

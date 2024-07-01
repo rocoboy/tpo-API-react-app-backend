@@ -1,13 +1,20 @@
 package com.nopay.nopayapi.controller.products;
 
+import com.nopay.nopayapi.dto.CategoryRequestDTO;
 import com.nopay.nopayapi.entity.products.Category;
 import com.nopay.nopayapi.service.products.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/categories")
@@ -17,56 +24,25 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping
-    public List<Category> getAllCategories() {
-        return categoryService.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable Integer id) {
-        Optional<Category> category = categoryService.findById(id);
-        return category.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Category>> getAllCategories() {
+        return ResponseEntity.ok(categoryService.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
-        try {
-            Category savedCategory = categoryService.save(category);
-            return ResponseEntity.ok(savedCategory);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
+    public ResponseEntity<Category> createCategory(@RequestBody CategoryRequestDTO categoryRequest) {
+        Category category = new Category(categoryRequest.getName());
+        return ResponseEntity.ok(categoryService.save(category));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable Integer id,
-            @RequestBody Category categoryDescription) {
-        Optional<Category> categoryOptional = categoryService.findById(id);
-
-        if (categoryOptional.isPresent()) {
-            Category existingCategory = categoryOptional.get();
-            existingCategory.setDescription(categoryDescription.getDescription());
-            existingCategory.setIdParent(categoryDescription.getIdParent());
-
-            try {
-                Category updatedCategory = categoryService.save(existingCategory);
-                return ResponseEntity.ok(updatedCategory);
-            } catch (IllegalArgumentException e) {
-                return ResponseEntity.badRequest().body(null);
-            }
-        } else {
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCategory(@RequestBody CategoryRequestDTO categoryRequest) {
+        Category category = categoryService.findByName(categoryRequest.getName());
+        if (category == null) {
             return ResponseEntity.notFound().build();
         }
+        categoryService.deleteById(category.getId());
+        return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Integer id) {
-        Optional<Category> categoryOptional = categoryService.findById(id);
-
-        if (categoryOptional.isPresent()) {
-            categoryService.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 }

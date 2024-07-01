@@ -5,13 +5,14 @@ import com.nopay.nopayapi.service.users.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -39,8 +40,8 @@ public class UserController {
         if (user.isPresent()) {
             User updatedUser = user.get();
             updatedUser.setDni(userDetails.getDni());
-            updatedUser.setName(userDetails.getName());
-            updatedUser.setSurname(userDetails.getSurname());
+            updatedUser.setFirstName(userDetails.getFirstName());
+            updatedUser.setLastName((userDetails.getLastName()));
             updatedUser.setAddress(userDetails.getAddress());
             updatedUser.setCity(userDetails.getCity());
             updatedUser.setPostalCode(userDetails.getPostalCode());
@@ -55,5 +56,21 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
         userService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/request-seller-role")
+    public ResponseEntity<?> requestSellerRole() {
+        userService.requestSellerRole();
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/approve-seller/{userId}")
+    public void approveSellerRole(@PathVariable Integer userId) {
+        userService.approveSellerRole(userId);
+    }
+
+    @PostMapping("/reject-seller/{userId}")
+    public void rejectSellerRole(@PathVariable Integer userId) {
+        userService.rejectSellerRole(userId);
     }
 }

@@ -4,25 +4,22 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "category")
 public class Category {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_category")
-    private Integer idCategory;
+    private Integer id;
 
-    private String description;
+    @Column(nullable = false, name = "name", unique = true)
+    private String name;
 
-    private Integer idParent;
+    public Category(String name) {
+        this.name = name;
+    }
 
-    @ManyToMany(mappedBy = "categories")
-    private Set<Product> products = new HashSet<>();
 }
