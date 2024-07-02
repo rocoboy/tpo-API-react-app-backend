@@ -56,6 +56,12 @@ public class ProductService {
     }
 
     @Transactional
+    public List<ProductResponseDTO> findBySeller(Integer sellerId) {
+        List<Product> products = productRepository.findBySellerId(sellerId);
+        return products.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    @Transactional
     public ProductResponseDTO save(ProductRequestDTO productRequestDTO) {
         User seller = getAuthenticatedUser();
         validateSeller(seller);
@@ -148,6 +154,7 @@ public class ProductService {
             Size size = new Size();
             size.setDescription(sizeDTO.getSize());
             size.setStock(sizeDTO.getStock());
+            product.setStock(product.getStock() == null ? sizeDTO.getStock() : product.getStock() + sizeDTO.getStock());
             size.setProduct(product);
             return sizeRepository.save(size);
         }).collect(Collectors.toSet());
@@ -176,7 +183,7 @@ public class ProductService {
         dto.setIdProduct(product.getIdProduct());
         dto.setDescription(product.getDescription());
         dto.setPrice(product.getPrice());
-        dto.setQuantity(product.getStock());
+        dto.setStock(product.getStock());
         Set<String> categories = product.getCategories().stream().map(Category::getName).collect(Collectors.toSet());
         dto.setCategories(categories);
         dto.setSizes(product.getSizes().stream().map(size -> new SizeDTO(size.getDescription(), size.getStock()))
@@ -184,6 +191,10 @@ public class ProductService {
         Set<String> colors = product.getProductColors().stream().map(productColor -> productColor.getColor().getName())
                 .collect(Collectors.toSet());
         dto.setColors(colors);
+        Set<MaterialDTO> materials = product.getMaterial() != null
+                ? Collections.singleton(new MaterialDTO(product.getMaterial().getDescription()))
+                : Collections.emptySet();
+        dto.setMaterials(materials);
         dto.setSeller(product.getSeller() != null ? convertToDTO(product.getSeller()) : null);
         return dto;
     }

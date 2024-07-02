@@ -10,4 +10,6 @@ import com.nopay.nopayapi.entity.users.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String mail);
+
+    void deleteById(Integer id);
 }

@@ -30,7 +30,26 @@ public class OrderItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private Integer quantity;
+    @ManyToOne
+    @MapsId("sizeId") // Map sizeId
+    @JoinColumn(name = "size_id", nullable = false)
     private Size size;
+
+    private Integer quantity;
     private BigDecimal price;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        OrderItem that = (OrderItem) o;
+        return id != null && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }

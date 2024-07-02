@@ -75,4 +75,10 @@ public class ProductController {
     public List<ProductResponseDTO> getProductsByCategories(@RequestParam List<String> categories) {
         return productService.findByCategories(categories);
     }
+
+    @GetMapping("/seller/{sellerId}")
+    public List<ProductResponseDTO> getProductsBySeller(@PathVariable Integer sellerId) {
+        return productService.findBySeller(sellerId);
+    }
+
 }
