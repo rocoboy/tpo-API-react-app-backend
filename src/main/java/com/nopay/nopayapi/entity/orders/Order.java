@@ -23,7 +23,7 @@ public class Order {
     private Integer idOrder;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "id", nullable = false)
     private User user;
 
     private LocalDateTime orderDate;

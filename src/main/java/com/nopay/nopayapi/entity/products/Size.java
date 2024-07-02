@@ -28,4 +28,19 @@ public class Size implements Serializable {
     @JoinColumn(name = "id_product", nullable = false)
     private Product product;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Size size = (Size) o;
+        return idSize != null && idSize.equals(size.idSize);
+    }
+
+    @Override
+    public int hashCode() {
+        return idSize != null ? idSize.hashCode() : 0;
+    }
+
 }
