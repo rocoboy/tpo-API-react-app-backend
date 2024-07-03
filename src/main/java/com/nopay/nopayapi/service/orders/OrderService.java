@@ -138,11 +138,16 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    public List<Order> getAllOrders() {
+    public List<OrderResponseDTO> getAllOrders() {
         User user = getAuthenticatedUser();
         validateAdminAuthorization(user);
 
-        return orderRepository.findAll();
+        List<Order> orders = orderRepository.findAll();
+        List<OrderResponseDTO> orderResponseDTOs = new ArrayList<>();
+        for (Order order : orders) {
+            orderResponseDTOs.add(convertToResponseDTO(order));
+        }
+        return orderResponseDTOs;
     }
 
     public Order getOrder(Integer orderId) {
