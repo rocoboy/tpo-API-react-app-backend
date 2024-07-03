@@ -50,7 +50,6 @@ public class FrontController {
         return ResponseEntity.ok(response);
     }
 
-    // add a paginated response for categories
     @GetMapping("/categories")
     public ResponseEntity<PaginatedResponse<Category>> getAllCategoriesPaginated(
             @RequestParam(defaultValue = "0") int page,

@@ -59,6 +59,11 @@ public class UserService {
     }
 
     @Transactional
+    public List<SellerRequest> findAllSellerRequests() {
+        return sellerRequestRepository.findAll();
+    }
+
+    @Transactional
     public void requestSellerRole() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

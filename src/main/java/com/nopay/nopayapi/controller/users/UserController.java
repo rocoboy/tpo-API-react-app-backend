@@ -61,6 +61,12 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("request-seller-role")
+    public ResponseEntity<?> getAllSellerRequests() {
+        userService.findAllSellerRequests();
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/request-seller-role")
     public ResponseEntity<?> requestSellerRole() {
         userService.requestSellerRole();
