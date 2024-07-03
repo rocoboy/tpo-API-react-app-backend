@@ -15,4 +15,6 @@ public class DiscountCodeDTO {
     private BigDecimal discountAmount;
     private Boolean isWholeOrder;
     private String description;
+    private Boolean active;
+    private Integer sellerId;
 }

@@ -1,7 +1,8 @@
 package com.nopay.nopayapi.controller;
 
 import com.nopay.nopayapi.dto.orders.DiscountCodeDTO;
-import com.nopay.nopayapi.service.orders.DiscountService;
+import com.nopay.nopayapi.service.orders.DiscountCodeService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,10 +11,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/discounts")
-public class DiscountController {
+public class DiscountCodeController {
 
     @Autowired
-    private DiscountService discountService;
+    private DiscountCodeService discountService;
 
     @GetMapping
     public ResponseEntity<List<DiscountCodeDTO>> getAllDiscountCodes() {
@@ -31,6 +32,12 @@ public class DiscountController {
     public ResponseEntity<DiscountCodeDTO> createDiscountCode(@RequestBody DiscountCodeDTO discountCodeDTO) {
         DiscountCodeDTO createdDiscountCode = discountService.createDiscountCode(discountCodeDTO);
         return ResponseEntity.ok(createdDiscountCode);
+    }
+
+    @PutMapping("/{id}/activate")
+    public ResponseEntity<DiscountCodeDTO> activateDiscountCode(@PathVariable Integer id) {
+        DiscountCodeDTO activatedDiscountCode = discountService.activateDiscountCode(id);
+        return ResponseEntity.ok(activatedDiscountCode);
     }
 
     @PutMapping("/{id}")

@@ -1,11 +1,11 @@
 package com.nopay.nopayapi.dto.products;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@NoArgsConstructor
 public class ImageResponseDTO {
-    private Long id;
+    private String name;
     private String file;
 }

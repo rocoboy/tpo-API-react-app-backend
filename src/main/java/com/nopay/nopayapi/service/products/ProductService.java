@@ -1,7 +1,10 @@
 package com.nopay.nopayapi.service.products;
 
+import com.nopay.nopayapi.dto.PaginatedResponse;
 import com.nopay.nopayapi.dto.SellerDTO;
 import com.nopay.nopayapi.dto.products.ColorDTO;
+import com.nopay.nopayapi.dto.products.ImageResponseDTO;
+import com.nopay.nopayapi.dto.products.ImageUploadRequestDTO;
 import com.nopay.nopayapi.dto.products.MaterialDTO;
 import com.nopay.nopayapi.dto.products.ProductRequestDTO;
 import com.nopay.nopayapi.dto.products.ProductResponseDTO;
@@ -12,13 +15,23 @@ import com.nopay.nopayapi.entity.products.*;
 import com.nopay.nopayapi.entity.users.Role;
 import com.nopay.nopayapi.entity.users.User;
 import com.nopay.nopayapi.repository.products.*;
+
+import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.base64.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Pageable;
 
-import java.util.*;
+import java.sql.Date;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,6 +104,13 @@ public class ProductService {
         Product product = createProductFromRequest(productRequestDTO, seller);
         product = productRepository.save(product);
 
+        // check that the product has at least 1 image
+        if (productRequestDTO.getImages() == null || productRequestDTO.getImages().isEmpty()) {
+            throw new IllegalArgumentException("Product must have at least 1 image");
+        }
+
+        product.setImages(createAndSaveImages(product, productRequestDTO.getImages()));
+
         if (productRequestDTO.getMaterial() != null && productRequestDTO.getMaterial().isPresent()) {
             product.setMaterial(createAndSaveMaterial(productRequestDTO.getMaterial(), product));
         }
@@ -102,6 +122,17 @@ public class ProductService {
 
         product = productRepository.save(product);
         return convertToDTO(product);
+    }
+
+    private Set<Image> createAndSaveImages(Product product, Set<ImageUploadRequestDTO> images) {
+        return images.stream().map(imageUploadRequest -> {
+            Image image = new Image();
+            image.setName(imageUploadRequest.getName());
+            image.setDate(new Date(System.currentTimeMillis()));
+            image.setImage(Base64.decode(imageUploadRequest.getFile()));
+            image.setProduct(product);
+            return image;
+        }).collect(Collectors.toSet());
     }
 
     private Material createAndSaveMaterial(Optional<MaterialDTO> material, Product product) {
@@ -200,6 +231,21 @@ public class ProductService {
         }).collect(Collectors.toSet());
     }
 
+    public PaginatedResponse<ProductResponseDTO> findAllPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        List<ProductResponseDTO> products = productPage.stream()
+                .map(product -> convertToDTO(product))
+                .collect(Collectors.toList());
+
+        return new PaginatedResponse<>(
+                products,
+                productPage.getNumber(),
+                productPage.getTotalPages(),
+                productPage.getTotalElements());
+    }
+
     private ProductResponseDTO convertToDTO(Product product) {
         ProductResponseDTO dto = new ProductResponseDTO();
         dto.setIdProduct(product.getIdProduct());
@@ -218,6 +264,12 @@ public class ProductService {
                 : Collections.emptySet();
         dto.setMaterials(materials);
         dto.setSeller(product.getSeller() != null ? convertToDTO(product.getSeller()) : null);
+        dto.setImages(product.getImages().stream().map(image -> {
+            ImageResponseDTO imageDTO = new ImageResponseDTO();
+            imageDTO.setName(image.getName());
+            imageDTO.setFile(Base64.toBase64String(image.getImage()));
+            return imageDTO;
+        }).collect(Collectors.toSet()));
         return dto;
     }
 

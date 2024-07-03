@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+import com.nopay.nopayapi.entity.users.User;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -30,4 +32,11 @@ public class DiscountCode {
 
     @Column(name = "description")
     private String description;
+
+    private Boolean active;
+
+    // lets link this code to the seller who created it
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private User seller;
 }

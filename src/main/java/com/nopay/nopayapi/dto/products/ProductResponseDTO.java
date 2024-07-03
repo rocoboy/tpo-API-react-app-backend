@@ -14,10 +14,11 @@ public class ProductResponseDTO {
     private String description;
     private BigDecimal price;
     private Integer stock;
-    private Set<String> categories; // Changed to List<String>
+    private Set<String> categories;
     private Set<SizeDTO> sizes;
     private Set<String> colors;
     private Set<MaterialDTO> materials;
+    private Set<ImageResponseDTO> images;
     private SellerDTO seller;
 
 }

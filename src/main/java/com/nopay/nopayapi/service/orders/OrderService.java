@@ -1,6 +1,7 @@
 package com.nopay.nopayapi.service.orders;
 
 import com.nopay.nopayapi.dto.orders.OrderResponseDTO;
+import com.nopay.nopayapi.dto.PaginatedResponse;
 import com.nopay.nopayapi.dto.orders.OrderDiscountResponseDTO;
 import com.nopay.nopayapi.dto.orders.OrderItemDTO;
 import com.nopay.nopayapi.dto.orders.OrderItemResponseDTO;
@@ -15,6 +16,8 @@ import com.nopay.nopayapi.repository.products.SizeRepository;
 import com.nopay.nopayapi.repository.users.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class OrderService {
@@ -230,6 +234,7 @@ public class OrderService {
 
         if (discountCodes != null && !discountCodes.isEmpty()) {
             for (String code : discountCodes) {
+
                 DiscountCode discountCode = discountCodeRepository.findByCode(code)
                         .orElseThrow(() -> new RuntimeException("Invalid discount code"));
                 totalDiscount = applyDiscountToOrder(order, discountCode, orderItems, totalDiscount);
@@ -241,7 +246,7 @@ public class OrderService {
 
     private BigDecimal applyDiscountToOrder(Order order, DiscountCode discountCode, Set<OrderItem> orderItems,
             BigDecimal totalDiscount) {
-        if (discountCode.getIsWholeOrder()) {
+        if (discountCode.getIsWholeOrder() && discountCode.getActive()) {
             totalDiscount = discountCode.getDiscountAmount();
             saveOrderDiscount(order, discountCode.getDiscountAmount(), discountCode.getDescription());
         } else {
@@ -255,7 +260,7 @@ public class OrderService {
         for (OrderItem item : orderItems) {
             Optional<ProductDiscount> productDiscount = productDiscountRepository
                     .findById(new ProductDiscountId(item.getProduct().getIdProduct(), discountCode.getId()));
-            if (productDiscount.isPresent()) {
+            if (productDiscount.isPresent() && productDiscount.get().getDiscountCode().getActive()) {
                 BigDecimal discount = discountCode.getDiscountAmount().multiply(BigDecimal.valueOf(item.getQuantity()));
                 totalDiscount = totalDiscount.add(discount);
                 saveOrderDiscount(order, discount, discountCode.getDescription());
@@ -265,7 +270,7 @@ public class OrderService {
     }
 
     private void saveOrderDiscount(Order order, BigDecimal discountAmount, String description) {
-        OrderDiscount orderDiscount = new OrderDiscount(null, order, discountAmount, description);
+        OrderDiscount orderDiscount = new OrderDiscount(null, order, discountAmount, description, true);
         orderDiscountRepository.save(orderDiscount);
     }
 
@@ -347,4 +352,20 @@ public class OrderService {
             orderDiscountRepository.deleteAllByOrder(order);
         }
     }
+
+    public PaginatedResponse<OrderResponseDTO> findAllPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Order> orderPage = orderRepository.findAll(pageable);
+
+        List<OrderResponseDTO> orders = orderPage.stream()
+                .map(order -> convertToResponseDTO(order))
+                .collect(Collectors.toList());
+
+        return new PaginatedResponse<>(
+                orders,
+                orderPage.getNumber(),
+                orderPage.getTotalPages(),
+                orderPage.getTotalElements());
+    }
+
 }

@@ -120,12 +120,14 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product has no images.");
         }
 
-        ImageResponse imageResponse = new ImageResponse();
-        imageResponse.setFile(images.stream().map(img -> {
-            return Base64.getEncoder().encodeToString(img.getImage());
-        }).collect(Collectors.toSet()));
+        Set<ImageResponse> imageResponses = images.stream().map(img -> {
+            ImageResponse imageResponse = new ImageResponse();
+            imageResponse.setName(img.getName());
+            imageResponse.setFile(Base64.getEncoder().encodeToString(img.getImage()));
+            return imageResponse;
+        }).collect(Collectors.toSet());
 
-        return ResponseEntity.ok(imageResponse);
+        return ResponseEntity.ok(imageResponses);
     }
 
     @PostMapping("/{id}/images")

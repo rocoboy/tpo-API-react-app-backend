@@ -1,5 +1,6 @@
 package com.nopay.nopayapi.service.users;
 
+import com.nopay.nopayapi.dto.UserResponseDTO;
 import com.nopay.nopayapi.entity.users.Role;
 import com.nopay.nopayapi.entity.users.SellerRequest;
 import com.nopay.nopayapi.entity.users.User;
@@ -32,8 +33,9 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public User findUserThatMadeTheRequest() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public UserResponseDTO findUserThatMadeTheRequest() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return convertToDTO(user);
     }
 
     public User save(User user) {
@@ -119,5 +121,21 @@ public class UserService {
     public boolean isSeller(Integer userId) {
         Optional<User> userOptional = userRepository.findById(userId);
         return userOptional.map(user -> user.getRole() == Role.SELLER).orElse(false);
+    }
+
+    public UserResponseDTO convertToDTO(User user) {
+        UserResponseDTO userResponse = UserResponseDTO.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .phone(Optional.ofNullable(user.getPhone()))
+                .address(Optional.ofNullable(user.getAddress()))
+                .city(Optional.ofNullable(user.getCity()))
+                .postalCode(Optional.ofNullable(user.getPostalCode()))
+                .role(user.getRole().name())
+                .dni(user.getDni())
+                .build();
+
+        return userResponse;
     }
 }

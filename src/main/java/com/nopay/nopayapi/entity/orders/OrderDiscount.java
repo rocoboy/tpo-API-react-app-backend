@@ -25,4 +25,6 @@ public class OrderDiscount {
 
     private BigDecimal discountAmount;
     private String description;
+
+    private Boolean active;
 }
