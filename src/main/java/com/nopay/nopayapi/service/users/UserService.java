@@ -32,6 +32,10 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public User findUserThatMadeTheRequest() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
     public User save(User user) {
         return userRepository.save(user);
     }
