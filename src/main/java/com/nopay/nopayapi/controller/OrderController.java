@@ -62,8 +62,8 @@ public class OrderController {
 
     @PutMapping("/{orderId}")
     public ResponseEntity<Order> updateOrder(@PathVariable Integer orderId,
-            @RequestBody OrderCreateRequestDTO request) {
-        Order updatedOrder = orderService.updateOrder(orderId, request.getItems(), request.getDiscountCodes());
+            @RequestBody OrderCreateRequestDTO request, @RequestParam(required = false) List<String> discountCodes) {
+        Order updatedOrder = orderService.updateOrder(orderId, request.getItems(), discountCodes);
         return ResponseEntity.ok(updatedOrder);
     }
 
