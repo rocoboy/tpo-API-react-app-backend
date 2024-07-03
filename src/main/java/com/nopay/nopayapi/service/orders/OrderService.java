@@ -129,13 +129,19 @@ public class OrderService {
                 .orElseThrow(() -> new RuntimeException("Authenticated user not found in the database"));
     }
 
-    public List<Order> getUserOrders(Integer userId) {
+    public List<OrderResponseDTO> getUserOrders(Integer userId) {
         User user = getAuthenticatedUser();
         validateUserAuthorization(user, userId);
 
-        return orderRepository.findAll().stream()
+        List<Order> orders = orderRepository.findAll().stream()
                 .filter(order -> order.getUser().getId().equals(userId))
                 .collect(Collectors.toList());
+
+        List<OrderResponseDTO> orderResponseDTOs = new ArrayList<>();
+        for (Order order : orders) {
+            orderResponseDTOs.add(convertToResponseDTO(order));
+        }
+        return orderResponseDTOs;
     }
 
     public List<OrderResponseDTO> getAllOrders() {

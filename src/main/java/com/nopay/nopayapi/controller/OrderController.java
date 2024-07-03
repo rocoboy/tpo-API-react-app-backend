@@ -33,8 +33,8 @@ public class OrderController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Order>> getUserOrders(@PathVariable Integer userId) {
-        List<Order> orders = orderService.getUserOrders(userId);
+    public ResponseEntity<List<OrderResponseDTO>> getUserOrders(@PathVariable Integer userId) {
+        List<OrderResponseDTO> orders = orderService.getUserOrders(userId);
         return ResponseEntity.ok(orders);
     }
 
