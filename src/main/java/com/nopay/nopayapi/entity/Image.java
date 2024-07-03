@@ -23,8 +23,10 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private String name;
+
     @Column(name = "image")
-    private Blob image;
+    private byte[] image;
 
     @Column(name = "date")
     private Date date;

@@ -122,11 +122,7 @@ public class ProductController {
 
         ImageResponse imageResponse = new ImageResponse();
         imageResponse.setFile(images.stream().map(img -> {
-            try {
-                return Base64.getEncoder().encodeToString(img.getImage().getBytes(1, (int) img.getImage().length()));
-            } catch (SQLException e) {
-                throw new RuntimeException("Error converting image to Base64", e);
-            }
+            return Base64.getEncoder().encodeToString(img.getImage());
         }).collect(Collectors.toSet()));
 
         return ResponseEntity.ok(imageResponse);
@@ -144,23 +140,18 @@ public class ProductController {
             Product product = productOptional.get();
 
             Set<Image> images = imageUploadRequests.stream().map(imageUploadRequest -> {
-                try {
-                    // Decode the Base64 encoded image
-                    byte[] bytes = Base64.getDecoder().decode(imageUploadRequest.getFile());
-                    Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
+                // Decode the Base64 encoded image
+                byte[] bytes = Base64.getDecoder().decode(imageUploadRequest.getFile());
 
-                    // Crear una nueva instancia de Image con los bytes de la imagen
-                    Image image = new Image();
-                    image.setImage(blob);
-                    image.setProduct(product);
+                // Create a new instance of Image with the image bytes
+                Image image = new Image();
+                image.setImage(bytes);
+                image.setProduct(product);
 
-                    return image;
-                } catch (SQLException e) {
-                    throw new RuntimeException("Failed to process image", e);
-                }
+                return image;
             }).collect(Collectors.toSet());
 
-            // Guardar las imágenes en la base de datos
+            // Save the images in the database
             imageService.saveAll(images);
 
             return ResponseEntity.status(HttpStatus.CREATED).body("Images added successfully.");
