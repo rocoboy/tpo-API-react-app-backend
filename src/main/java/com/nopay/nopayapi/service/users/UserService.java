@@ -60,6 +60,11 @@ public class UserService {
 
     @Transactional
     public List<SellerRequest> findAllSellerRequests() {
+        User admin = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (admin.getRole() != Role.ADMIN) {
+            throw new IllegalArgumentException("User is not an admin");
+        }
         return sellerRequestRepository.findAll();
     }
 
