@@ -1,5 +1,7 @@
 package com.nopay.nopayapi.service.products;
 
+import com.nopay.nopayapi.dto.PaginatedResponse;
+import com.nopay.nopayapi.dto.products.CategoryResponseDTO;
 import com.nopay.nopayapi.entity.products.Category;
 import com.nopay.nopayapi.entity.users.Role;
 import com.nopay.nopayapi.entity.users.User;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -67,5 +70,23 @@ public class CategoryService {
         }
 
         categoryRepository.deleteById(id);
+    }
+
+    @Transactional
+    public PaginatedResponse<Category> findAllPaginated(Integer page, Integer size) {
+        List<Category> categories = categoryRepository.findAll();
+
+        List<Category> paginatedCategories = categories.stream()
+                .skip(page * size)
+                .limit(size)
+                .collect(Collectors.toList());
+
+        return new PaginatedResponse<>(paginatedCategories, page, size, categories.size());
+    }
+
+    public CategoryResponseDTO convertToDTO(Category category) {
+        CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
+        categoryResponseDTO.setName(category.getName());
+        return categoryResponseDTO;
     }
 }

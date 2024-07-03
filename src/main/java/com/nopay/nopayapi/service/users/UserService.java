@@ -134,6 +134,7 @@ public class UserService {
                 .postalCode(Optional.ofNullable(user.getPostalCode()))
                 .role(user.getRole().name())
                 .dni(user.getDni())
+                .id(user.getId())
                 .build();
 
         return userResponse;

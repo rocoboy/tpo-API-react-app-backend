@@ -9,6 +9,7 @@ import lombok.Data;
 @Builder
 public class UserResponseDTO {
 
+    private Integer id;
     private String firstName;
     private String lastName;
     private String email;

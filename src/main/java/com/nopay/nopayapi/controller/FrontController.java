@@ -2,8 +2,11 @@ package com.nopay.nopayapi.controller;
 
 import com.nopay.nopayapi.dto.PaginatedResponse;
 import com.nopay.nopayapi.dto.orders.OrderResponseDTO;
+import com.nopay.nopayapi.dto.products.CategoryResponseDTO;
 import com.nopay.nopayapi.dto.products.ProductResponseDTO;
+import com.nopay.nopayapi.entity.products.Category;
 import com.nopay.nopayapi.service.orders.OrderService;
+import com.nopay.nopayapi.service.products.CategoryService;
 import com.nopay.nopayapi.service.products.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,9 @@ public class FrontController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     private static final int MAX_PAGE_SIZE = 50; // Define maximum page size
 
@@ -44,5 +50,15 @@ public class FrontController {
         return ResponseEntity.ok(response);
     }
 
-    // Add more endpoints for other entities as needed
+    // add a paginated response for categories
+    @GetMapping("/categories")
+    public ResponseEntity<PaginatedResponse<Category>> getAllCategoriesPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        if (size > MAX_PAGE_SIZE) {
+            size = MAX_PAGE_SIZE;
+        }
+        PaginatedResponse<Category> response = categoryService.findAllPaginated(page, size);
+        return ResponseEntity.ok(response);
+    }
 }

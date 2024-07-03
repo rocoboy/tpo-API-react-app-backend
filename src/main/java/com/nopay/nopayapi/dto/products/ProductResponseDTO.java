@@ -9,7 +9,6 @@ import lombok.Data;
 
 @Data
 public class ProductResponseDTO {
-
     private Integer idProduct;
     private String description;
     private BigDecimal price;

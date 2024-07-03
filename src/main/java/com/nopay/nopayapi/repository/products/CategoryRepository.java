@@ -1,5 +1,6 @@
 package com.nopay.nopayapi.repository.products;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,5 +10,7 @@ import com.nopay.nopayapi.entity.products.Category;
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
     // findByCategoryName
     Category findByName(String name);
+
+    List<Category> findAll();
 
 }
