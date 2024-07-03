@@ -1,11 +1,12 @@
 package com.nopay.nopayapi.controller;
 
-import lombok.Builder;
+import java.util.Set;
+
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@NoArgsConstructor
 public class ImageResponse {
-    private Integer id;
-    private String file;
+    private Set<String> file;
 }

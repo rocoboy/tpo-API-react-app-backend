@@ -7,6 +7,7 @@ import com.nopay.nopayapi.dto.products.ProductRequestDTO;
 import com.nopay.nopayapi.dto.products.ProductResponseDTO;
 import com.nopay.nopayapi.dto.products.ProductUpdateRequestDTO;
 import com.nopay.nopayapi.dto.products.SizeDTO;
+import com.nopay.nopayapi.entity.Image;
 import com.nopay.nopayapi.entity.products.*;
 import com.nopay.nopayapi.entity.users.Role;
 import com.nopay.nopayapi.entity.users.User;
@@ -42,6 +43,27 @@ public class ProductService {
     public List<ProductResponseDTO> findAll() {
         List<Product> products = productRepository.findAll();
         return products.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<ProductResponseDTO> findAllBySeller(User seller) {
+        List<Product> products = productRepository.findBySellerId(seller.getId());
+        return products.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Set<Image> getProductImages(Integer idProduct) {
+        Optional<Product> product = productRepository.findById(idProduct);
+
+        if (product.isEmpty()) {
+            throw new IllegalArgumentException("Product not found");
+        }
+
+        if (product.get().getImages() == null || product.get().getImages().isEmpty()) {
+            throw new IllegalArgumentException("Product has no images");
+        }
+
+        return product.get().getImages();
     }
 
     @Transactional

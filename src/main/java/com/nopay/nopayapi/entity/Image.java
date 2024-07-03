@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Blob;
 import java.util.Date;
 
 import com.nopay.nopayapi.entity.products.Product;
@@ -23,7 +24,7 @@ public class Image {
     private Integer id;
 
     @Column(name = "image")
-    private byte[] imageBytes;
+    private Blob image;
 
     @Column(name = "date")
     private Date date;
