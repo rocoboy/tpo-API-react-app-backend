@@ -163,9 +163,12 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public List<ProductResponseDTO> findByCategories(List<String> categories) {
-        List<Product> products = productRepository.findByCategories(categories);
+    public List<ProductResponseDTO> findByCategories(String categories) {
+
+        List<Product> products = productRepository.findByCategory(categories);
+
         return products.stream().map(this::convertToDTO).collect(Collectors.toList());
+
     }
 
     private User getAuthenticatedUser() {

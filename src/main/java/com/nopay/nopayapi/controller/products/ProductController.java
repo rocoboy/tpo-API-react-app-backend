@@ -85,7 +85,9 @@ public class ProductController {
     }
 
     @GetMapping("/categories")
-    public List<ProductResponseDTO> getProductsByCategories(@RequestParam List<String> categories) {
+    public List<ProductResponseDTO> getProductsByCategories(@RequestParam String categories) {
+        if (categories == null || categories.isEmpty())
+            return productService.findAll();
         return productService.findByCategories(categories);
     }
 

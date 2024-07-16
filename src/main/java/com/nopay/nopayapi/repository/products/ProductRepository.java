@@ -15,5 +15,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("SELECT p FROM Product p JOIN p.categories c WHERE c IN :categories")
     List<Product> findByCategories(List<String> categories);
 
+    // method to search for products by categorie name
+    @Query("SELECT p FROM Product p JOIN p.categories c WHERE c.name = :category")
+    List<Product> findByCategory(String category);
+
     List<Product> findBySellerId(Integer sellerId);
 }

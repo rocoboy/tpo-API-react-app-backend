@@ -61,7 +61,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("request-seller-role")
+    @GetMapping("/request-seller-role")
     public ResponseEntity<?> getAllSellerRequests() {
         userService.findAllSellerRequests();
         return ResponseEntity.ok().build();
@@ -73,12 +73,12 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/approve-seller/{userId}")
+    @PostMapping("/approve-seller-role/{userId}")
     public void approveSellerRole(@PathVariable Integer userId) {
         userService.approveSellerRole(userId);
     }
 
-    @PostMapping("/reject-seller/{userId}")
+    @PostMapping("/reject-seller-role/{userId}")
     public void rejectSellerRole(@PathVariable Integer userId) {
         userService.rejectSellerRole(userId);
     }

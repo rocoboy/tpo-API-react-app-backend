@@ -96,9 +96,10 @@ public class UserService {
             throw new IllegalArgumentException("User is not an admin");
         }
 
-        Optional<SellerRequest> sellerRequestOptional = sellerRequestRepository.findById(userId);
-        if (sellerRequestOptional.isPresent()) {
-            SellerRequest sellerRequest = sellerRequestOptional.get();
+        SellerRequest sellerRequestOptional = sellerRequestRepository.findByUserId(userId);
+        if (sellerRequestOptional != null
+                && sellerRequestOptional.getStatus().equals(SellerRequest.RequestStatus.PENDING)) {
+            SellerRequest sellerRequest = sellerRequestOptional;
             User user = sellerRequest.getUser();
             user.setRole(Role.SELLER);
             sellerRequest.setStatus(SellerRequest.RequestStatus.APPROVED);

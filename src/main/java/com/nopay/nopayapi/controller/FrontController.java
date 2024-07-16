@@ -9,6 +9,8 @@ import com.nopay.nopayapi.service.orders.OrderService;
 import com.nopay.nopayapi.service.products.CategoryService;
 import com.nopay.nopayapi.service.products.ProductService;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,5 +61,12 @@ public class FrontController {
         }
         PaginatedResponse<Category> response = categoryService.findAllPaginated(page, size);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("products/categories")
+    public List<ProductResponseDTO> getProductsByCategories(@RequestParam String categories) {
+        if (categories == null || categories.isEmpty())
+            return productService.findAll();
+        return productService.findByCategories(categories);
     }
 }
